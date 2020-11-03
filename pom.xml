@@ -1,0 +1,112 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>net.fuzui</groupId>
+	<artifactId>aggregatelogistics-demo-jfinal</artifactId>
+	<version>0.0.1</version>
+	<packaging>jar</packaging>
+	
+	<properties>
+		<jfinal.version>4.9.02</jfinal.version>
+		<jfinal-undertow.version>2.2</jfinal-undertow.version>
+		<aggregatelogistics.version>0.0.4</aggregatelogistics.version>
+		<java.version>1.8</java.version>
+		<maven-compiler-plugin.version>3.6.1</maven-compiler-plugin.version>
+		<maven-jar-plugin.version>2.6</maven-jar-plugin.version>
+		<maven-assembly-plugin.version>3.1.0</maven-assembly-plugin.version>
+	</properties>
+	
+	<dependencies>
+		<dependency>
+			<groupId>com.jfinal</groupId>
+			<artifactId>jfinal</artifactId>
+			<version>${jfinal.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.jfinal</groupId>
+			<artifactId>jfinal-undertow</artifactId>
+			<version>${jfinal-undertow.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>net.kdks</groupId>
+			<artifactId>aggregatelogistics</artifactId>
+			<version>${aggregatelogistics.version}</version>
+		</dependency>
+	</dependencies>
+	<build>
+		<resources>
+			<resource>
+				<directory>lib</directory>
+				<targetPath>/BOOT-INF/lib/</targetPath>
+				<includes>
+					<include>**/*.jar</include>
+				</includes>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven-compiler-plugin.version}</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+					<encoding>UTF-8</encoding>
+					<!-- java8 保留参数名编译参数 -->
+					<compilerArgument>-parameters</compilerArgument>
+					<compilerArguments>
+						<verbose />
+					</compilerArguments>
+				</configuration>
+			</plugin>
+
+			<!-- jar 包中的配置文件优先级高于 config 目录下的 "同名文件" 因此，打包时需要排除掉 jar 包中来自 src/main/resources 
+				目录的 配置文件，否则部署时 config 目录中的同名配置文件不会生效 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>${maven-jar-plugin.version}</version>
+				<configuration>
+					<excludes>
+						<!-- *.* 用法，可以匹配 jar 包根目录下所有文件 *.xxx 用法，可以匹配 jar 包根目录下特定扩展名文件，例如：*.xml 
+							**/* 前缀用法，可以匹配所有路径，例如：**/*.txt -->
+						<exclude>*.*</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+
+			<!-- 使用 mvn clean package 打包 更多配置可参考官方文档：http://maven.apache.org/plugins/maven-assembly-plugin/single-mojo.html -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>${maven-assembly-plugin.version}</version>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+
+						<configuration>
+							<!-- 打包生成的文件名 -->
+							<finalName>${project.artifactId}</finalName>
+							<!-- jar 等压缩文件在被打包进入 zip、tar.gz 时是否压缩，设置为 false 可加快打包速度 -->
+							<recompressZippedFiles>false</recompressZippedFiles>
+							<!-- 打包生成的文件是否要追加 package.xml 中定义的 id 值 -->
+							<appendAssemblyId>true</appendAssemblyId>
+							<!-- 指向打包描述文件 package.xml -->
+							<descriptors>
+								<descriptor>package.xml</descriptor>
+							</descriptors>
+							<!-- 打包结果输出的基础目录 -->
+							<outputDirectory>${project.build.directory}/</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+		</plugins>
+	</build>
+</project>
