@@ -2,9 +2,11 @@ package net.fuzui.utils;
 
 import net.fuzui.model.ErrorCodeEnum;
 import net.fuzui.model.QueryLogistics;
+import net.fuzui.model.QueryPriceLogistics;
 import net.fuzui.model.Res;
 import net.kdks.constant.ExpressResponseStatus;
 import net.kdks.enums.ExpressCompanyCodeEnum;
+import net.kdks.model.ExpressPriceResult;
 import net.kdks.model.ExpressResponse;
 import net.kdks.utils.StringUtils;
 
@@ -15,10 +17,13 @@ import net.kdks.utils.StringUtils;
  */
 public class DisposeData {
 	public static ErrorCodeEnum checkoutQueryParam(QueryLogistics queryLogistics) {
+		if(queryLogistics == null) {
+			return ErrorCodeEnum.NOT_PARAM;
+		}
 		if(StringUtils.isEmpty(queryLogistics.getExpressCompanyNo())) {
 			return ErrorCodeEnum.NOT_EXPRESS_COMPANY_NO;
 		}
-		if(StringUtils.isEmpty(queryLogistics.getExpressNo())) {
+		if(queryLogistics.getExpressNos().size() == 0) {
 			return ErrorCodeEnum.NOT_EXPRESS_NO;
 		}
 		if(ExpressCompanyCodeEnum.SF.getValue().equals(queryLogistics.getExpressCompanyNo())
@@ -28,8 +33,14 @@ public class DisposeData {
 
 		return ErrorCodeEnum.SUCCESS;
 	}
+	public static ErrorCodeEnum checkoutQueryPriceParam(QueryPriceLogistics queryPriceLogistics) {
+		if(queryPriceLogistics == null) {
+			return ErrorCodeEnum.NOT_PARAM;
+		}
+		return ErrorCodeEnum.SUCCESS;
+	}
 	
-	public static Res resultDispose(ExpressResponse response) {
+	public static Res resultDispose(ExpressResponse<ExpressPriceResult> response, boolean single) {
 		if(ErrorCodeEnum.EXPRESS_NO_NOT_EXIST.getMsg().equals(response.getMsg())) {
 			return new Res(ErrorCodeEnum.EXPRESS_NO_NOT_EXIST.getCode(), response.getMsg());
 		}
@@ -38,4 +49,5 @@ public class DisposeData {
 		}
 		return Res.ok(response.getData());
 	}
+	
 }

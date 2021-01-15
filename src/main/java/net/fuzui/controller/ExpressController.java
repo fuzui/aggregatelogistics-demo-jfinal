@@ -1,5 +1,8 @@
 package net.fuzui.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.jfinal.core.Controller;
 import com.jfinal.json.FastJson;
 import com.jfinal.kit.HttpKit;
@@ -7,11 +10,11 @@ import com.jfinal.kit.PropKit;
 
 import net.fuzui.model.ErrorCodeEnum;
 import net.fuzui.model.QueryLogistics;
+import net.fuzui.model.QueryPriceLogistics;
 import net.fuzui.model.Res;
 import net.fuzui.utils.DisposeData;
 import net.kdks.config.ExpressConfig;
 import net.kdks.handler.ExpressHandlers;
-import net.kdks.model.ExpressParam;
 import net.kdks.model.ExpressResponse;
 
 /**
@@ -34,10 +37,17 @@ public class ExpressController extends Controller {
 		this.expressHandlers = new ExpressHandlers(config);
 	}
 	public void index() {
+		getResponse().addHeader("Access-Control-Allow-Origin", "*");
+		getResponse().addHeader("Access-Control-Allow-Methods", "POST, GET");
+		getResponse().addHeader("Access-Control-Max-Age", "3600");
+		getResponse().addHeader("Access-Control-Allow-Headers",
+				"Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 		String jsonString= HttpKit.readData(getRequest());
 		System.out.println(jsonString);
 		QueryLogistics param = FastJson.getJson().parse(jsonString, QueryLogistics.class);
-		ExpressParam expressParam = param;
+		List<String> expressNos = new ArrayList<String>();
+		expressNos.add(param.getExpressNo());
+		param.setExpressNos(expressNos);
 		ErrorCodeEnum errorCodeEnum = DisposeData.checkoutQueryParam(param);
 		System.out.println(PropKit.get("privilege.key"));
 		if(param.getKey()==null || !param.getKey().equals(PropKit.get(KEY_NAME))) {
@@ -47,7 +57,56 @@ public class ExpressController extends Controller {
 			renderJson(new Res(errorCodeEnum.getCode(), errorCodeEnum.getMsg()));
 			return;
 		}
-		ExpressResponse result = expressHandlers.getExpressInfo(expressParam, param.getExpressCompanyNo());
-		renderJson(DisposeData.resultDispose(result));
+		ExpressResponse result = expressHandlers.getExpressInfo(param, param.getExpressCompanyNo());
+		renderJson(DisposeData.resultDispose(result, true));
+	}
+	
+	public void batch() {
+		getResponse().addHeader("Access-Control-Allow-Origin", "*");
+		getResponse().addHeader("Access-Control-Allow-Methods", "POST, GET");
+		getResponse().addHeader("Access-Control-Max-Age", "3600");
+		getResponse().addHeader("Access-Control-Allow-Headers",
+				"Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+		String jsonString= HttpKit.readData(getRequest());
+		System.out.println(jsonString);
+		QueryLogistics param = FastJson.getJson().parse(jsonString, QueryLogistics.class);
+		ErrorCodeEnum errorCodeEnum = DisposeData.checkoutQueryParam(param);
+		System.out.println(PropKit.get("privilege.key"));
+		if(param.getKey()==null || !param.getKey().equals(PropKit.get(KEY_NAME))) {
+			errorCodeEnum =  ErrorCodeEnum.NO_AUTH;
+		}
+		if(!errorCodeEnum.getCode().equals(ErrorCodeEnum.SUCCESS.getCode())) {
+			renderJson(new Res(errorCodeEnum.getCode(), errorCodeEnum.getMsg()));
+			return;
+		}
+		ExpressResponse result = expressHandlers.getExpressInfo(param, param.getExpressCompanyNo());
+		renderJson(DisposeData.resultDispose(result, false));
+	}
+	
+	public void price() {
+		getResponse().addHeader("Access-Control-Allow-Origin", "*");
+		getResponse().addHeader("Access-Control-Allow-Methods", "POST, GET");
+		getResponse().addHeader("Access-Control-Max-Age", "3600");
+		getResponse().addHeader("Access-Control-Allow-Headers",
+				"Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+		String jsonString= HttpKit.readData(getRequest());
+		System.out.println(jsonString);
+		QueryPriceLogistics param = FastJson.getJson().parse(jsonString, QueryPriceLogistics.class);
+		ErrorCodeEnum errorCodeEnum = DisposeData.checkoutQueryPriceParam(param);
+		System.out.println(PropKit.get("privilege.key"));
+		if(param.getKey()==null || !param.getKey().equals(PropKit.get(KEY_NAME))) {
+			errorCodeEnum =  ErrorCodeEnum.NO_AUTH;
+		}
+		if(!errorCodeEnum.getCode().equals(ErrorCodeEnum.SUCCESS.getCode())) {
+			renderJson(new Res(errorCodeEnum.getCode(), errorCodeEnum.getMsg()));
+			return;
+		}
+		ExpressResponse result = expressHandlers.getExpressPrice(param, param.getExpressCompanyNo());
+		renderJson(DisposeData.resultDispose(result, false));
+	}
+	
+	public void test() {
+		String testjson = "1123";
+		renderJson(testjson);
 	}
 }

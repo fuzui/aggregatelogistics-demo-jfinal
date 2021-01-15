@@ -16,7 +16,8 @@ public enum ErrorCodeEnum {
     NOT_TEL("A0004", "顺丰快递必填手机号"),
     NO_AUTH("A0005", "无权访问"),
     NOT_EXPRESS_NO("A0006", "单号为空"),
-    EXPRESS_NO_NOT_EXIST("A0007", "单号不存在");
+    EXPRESS_NO_NOT_EXIST("A0007", "单号不存在"),
+	NOT_PARAM("A0008", "请求方式有误或缺少必要参数");
 
     private String code;
     private String msg;

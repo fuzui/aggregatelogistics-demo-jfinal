@@ -12,6 +12,7 @@ import com.jfinal.kit.PropKit;
 import com.jfinal.server.undertow.UndertowServer;
 import com.jfinal.template.Engine;
 
+import net.fuzui.controller.BackController;
 import net.fuzui.controller.ExpressController;
 
 /**
@@ -46,6 +47,7 @@ public class ExpressConfig extends JFinalConfig {
 	@Override
     public void configRoute(Routes me) {
        me.add("/jfinal/logisticsServer/query", ExpressController.class);
+       me.add("/jfinal/logisticsServer/back", BackController.class);
     }
 	@Override
     public void configEngine(Engine me) {}

@@ -10,11 +10,12 @@
 	<properties>
 		<jfinal.version>4.9.02</jfinal.version>
 		<jfinal-undertow.version>2.2</jfinal-undertow.version>
-		<aggregatelogistics.version>0.0.4</aggregatelogistics.version>
+		<aggregatelogistics.version>0.0.7</aggregatelogistics.version>
 		<java.version>1.8</java.version>
 		<maven-compiler-plugin.version>3.6.1</maven-compiler-plugin.version>
 		<maven-jar-plugin.version>2.6</maven-jar-plugin.version>
 		<maven-assembly-plugin.version>3.1.0</maven-assembly-plugin.version>
+		<dom4j.version>2.1.3</dom4j.version>
 	</properties>
 	
 	<dependencies>
@@ -32,6 +33,11 @@
 			<groupId>net.kdks</groupId>
 			<artifactId>aggregatelogistics</artifactId>
 			<version>${aggregatelogistics.version}</version>
+		</dependency>
+		<dependency>
+		  <groupId>org.dom4j</groupId>
+		  <artifactId>dom4j</artifactId>
+		  <version>${dom4j.version}</version>
 		</dependency>
 	</dependencies>
 	<build>
