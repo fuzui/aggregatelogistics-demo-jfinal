@@ -171,7 +171,7 @@ public class ExpressController extends Controller {
 			ExpressResult data = expressResultList.get(code);
 			resultDatas.add(entry.getKey(), data);
 		}
-		renderJson(resultDatas);
+		renderJson(Res.ok(resultDatas));
 	}
 	
 	public void price() {
