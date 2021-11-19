@@ -12,6 +12,7 @@ import net.kdks.constant.ExpressResponseStatus;
 import net.kdks.enums.ExpressCompanyCodeEnum;
 import net.kdks.model.ExpressPriceResult;
 import net.kdks.model.ExpressResponse;
+import net.kdks.model.ExpressResult;
 import net.kdks.utils.StringUtils;
 
 /**
@@ -69,7 +70,7 @@ public class DisposeData {
 		return ErrorCodeEnum.SUCCESS;
 	}
 	
-	public static Res resultDispose(ExpressResponse<ExpressPriceResult> response, boolean single) {
+	public static Res resultDispose(ExpressResponse response, boolean single) {
 		if(ErrorCodeEnum.EXPRESS_NO_NOT_EXIST.getMsg().equals(response.getMsg())) {
 			return new Res(ErrorCodeEnum.EXPRESS_NO_NOT_EXIST.getCode(), response.getMsg());
 		}
